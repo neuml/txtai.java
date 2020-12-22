@@ -1,0 +1,35 @@
+apply plugin: "java"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation files("../build/libs/txtai-1.0.0.jar")
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
+task embeddings(type: JavaExec) {
+    description = "Runs Embeddings demo"
+    classpath = sourceSets.main.runtimeClasspath
+    main = "EmbeddingsDemo"
+}
+
+task extractor(type: JavaExec) {
+    description = "Runs Extractor demo"
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ExtractorDemo"
+}
+
+task labels(type: JavaExec) {
+    description = "Runs Labels demo"
+    classpath = sourceSets.main.runtimeClasspath
+    main = "LabelsDemo"
+}
