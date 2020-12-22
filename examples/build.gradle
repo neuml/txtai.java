@@ -2,12 +2,13 @@ apply plugin: "java"
 
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
-    implementation files("../build/libs/txtai-1.0.0.jar")
+    implementation 'com.github.neuml:txtai.java:master-SNAPSHOT'
 }
 
 java {

@@ -11,12 +11,23 @@ This repository contains Java bindings for the txtai API. Full txtai functionali
 
 ## Installation
 
-Add the following lines to your project `build.gradle` file:
+Jitpack is the recommended way to integrate txtai with Java. See [this link](https://jitpack.io/) for how to install JitPack.
+
+The following is an example adding txtai to a project's `build.gradle` file. The same attributes can be ported to other build systems per the JitPack link above.
 
 ```gradle
+implementation 'com.github.neuml:txtai.java:v1.0.0'
 ```
 
-Other build systems such as Maven can use also use the same dependency string.
+txtai can also be manually built from GitHub.
+
+```bash
+git clone https://github.com/neuml/txtai.java
+cd txtai.java
+./gradlew jar
+```
+
+The JAR will be available in ./build/libs
 
 ## Examples
 The examples directory has a series of examples that give an overview of txtai. See the list of examples below.
