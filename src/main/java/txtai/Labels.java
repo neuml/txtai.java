@@ -1,13 +1,14 @@
 package txtai;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
+
+import txtai.API.IndexResult;
 
 /**
  * txtai labels instance. 
@@ -22,20 +23,10 @@ public class Labels {
      */
     public interface Remote {
         @POST("label")
-        Call<List<List>> label(@Body HashMap params);
-    }
- 
-    /**
-     * Label score.
-     */
-    public static class Score {
-        public String id;
-        public double score;
+        Call<List<IndexResult>> label(@Body HashMap params);
 
-        public Score(String id, double score) {
-            this.id = id;
-            this.score = score;
-        }
+        @POST("batchlabel")
+        Call<List<List<IndexResult>>> batchlabel(@Body HashMap params);
     }
 
     /**
@@ -50,27 +41,39 @@ public class Labels {
     }
 
     /**
-     * Applies a zero shot classifier to a text section using a list of labels.
+     * Applies a zero shot classifier to text using a list of labels. Returns a list of
+     * {id: value, score: value} sorted by highest score, where id is the index in labels.
      * 
      * @param text input text
      * @param labels list of labels
-     * @return list of Scores
+     * @return list of {id: value, score: value} per text element
      */
-    public List<Score> label(String text, List<String> labels) throws IOException {
+    public List<IndexResult> label(String text, List<String> labels) throws IOException {
         // Post parameters
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("text", text);
         params.put("labels", labels);
 
         // Execute API call
-        List<List> response = this.api.label(params).execute().body();
+        return this.api.label(params).execute().body();
+    }
 
-        // Map array results to scores
-        List<Score> scores = new ArrayList<Score>();
-        for (List entry: response) {
-            scores.add(new Score((String)entry.get(0), (double)entry.get(1)));
-        }
+    /**
+     * Applies a zero shot classifier to list of text using a list of labels. Returns a list of
+     * {id: value, score: value} sorted by highest score, where id is the index in labels per
+     * text element.
+     *
+     * @param texts list of texts
+     * @param labels list of labels
+     * @return list of {id: value score: value} per text element
+     */
+    public List<List<IndexResult>> batchlabel(List<String> texts, List<String> labels) throws IOException {
+        // Post parameters
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("texts", texts);
+        params.put("labels", labels);
 
-        return scores;
+        // Execute API call
+        return this.api.batchlabel(params).execute().body();
     }
 }

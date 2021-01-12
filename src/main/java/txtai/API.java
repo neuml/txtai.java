@@ -15,6 +15,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class API {
     /**
+     * IndexResult
+     */
+    public static class IndexResult {
+        public int id;
+        public double score;
+
+        public IndexResult(int id, double score) {
+            this.id = id;
+            this.score = score;
+        }
+    }
+
+    /**
      * Creates a new Retrofit API instance.
      * 
      * @param url base url

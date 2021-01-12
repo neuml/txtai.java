@@ -2,8 +2,10 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
+import txtai.API.IndexResult;
 import txtai.Embeddings;
 import txtai.Embeddings.Document;
+import txtai.Embeddings.SearchResult;
 
 /**
  * Example embeddings functionality.
@@ -11,24 +13,11 @@ import txtai.Embeddings.Document;
  * Implements functionality found in this notebook: https://github.com/neuml/txtai/blob/master/examples/01_Introducing_txtai.ipynb
  */
 public class EmbeddingsDemo {
-    public static int argmax(List<Double> values) {
-        double max = -1.0;
-        int argmax = 0;
-        for (int x = 0; x < values.size(); x++) {
-            if (values.get(x) > max) {
-                argmax = x;
-                max = values.get(x);
-            }
-        }
-
-        return argmax;
-    }
-
     public static void main(String[] args) {
         try {
             Embeddings embeddings = new Embeddings("http://localhost:8000");
 
-            List<String> sections =
+            List<String> data =
                 Arrays.asList("US tops 5 million confirmed virus cases", 
                               "Canada's last fully intact ice shelf has suddenly collapsed, forming a Manhattan-sized iceberg",
                               "Beijing mobilises invasion craft along coast as Taiwan tensions escalate",
@@ -37,8 +26,8 @@ public class EmbeddingsDemo {
                               "Make huge profits without work, earn up to $100,000 a day");
 
             List<Document> documents = new ArrayList<Document>(); 
-            for(int x = 0; x < sections.size(); x++) {
-                Document d = new Document(String.valueOf(x), sections.get(x));
+            for(int x = 0; x < data.size(); x++) {
+                Document d = new Document(String.valueOf(x), data.get(x));
                 documents.add(d);
             }
 
@@ -47,9 +36,9 @@ public class EmbeddingsDemo {
             System.out.println(new String(new char[50]).replace("\0", "-"));
 
             for (String query: Arrays.asList("feel good story", "climate change", "health", "war", "wildlife", "asia", "north america", "dishonest junk")) {
-                List<Double> results = embeddings.similarity(query, sections);
-                int argmax = EmbeddingsDemo.argmax(results);
-                System.out.printf("%-20s %s%n", query, sections.get(argmax));
+                List<IndexResult> results = embeddings.similarity(query, data);
+                int uid = results.get(0).id;
+                System.out.printf("%-20s %s%n", query, data.get(uid));
             }
 
             embeddings.add(documents);
@@ -60,9 +49,9 @@ public class EmbeddingsDemo {
             System.out.println(new String(new char[50]).replace("\0", "-"));
 
             for (String query: Arrays.asList("feel good story", "climate change", "health", "war", "wildlife", "asia", "north america", "dishonest junk")) {
-                List results = embeddings.search(query, 1);
-                int argmax = Integer.parseInt((String)((List)results.get(0)).get(0));
-                System.out.printf("%-20s %s%n", query, sections.get(argmax));
+                List<SearchResult> results = embeddings.search(query, 1);
+                int uid = Integer.parseInt(results.get(0).id);
+                System.out.printf("%-20s %s%n", query, data.get(uid));
             }
         }
         catch (Exception ex) {

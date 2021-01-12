@@ -5,12 +5,11 @@ import java.util.List;
 import txtai.Extractor;
 import txtai.Extractor.Answer;
 import txtai.Extractor.Question;
-import txtai.Extractor.Section;
 
 /**
  * Example extractor functionality.
  * 
- * Implements logic found in this notebook: https://github.com/neuml/txtai/blob/master/examples/02_Extractive_QA_with_txtai.ipynb
+ * Implements logic found in this notebook: https://github.com/neuml/txtai/blob/master/examples/05_Extractive_QA_with_txtai.ipynb
  */
 public class ExtractorDemo {
     public static void main(String[] args) {
@@ -31,12 +30,6 @@ public class ExtractorDemo {
                               "Flyers 4 Lightning 1 final",
                               "Flyers win 4-1");
 
-            List<Section> sections = new ArrayList<Section>(); 
-            for(int x = 0; x < data.size(); x++) {
-                Section s = new Section(x, data.get(x));
-                sections.add(s);
-            }
-
             // Run series of questions
             List<String> questions = Arrays.asList("What team won the game?", "What was score?");
             for (String query: Arrays.asList("Red Sox - Blue Jays", "Phillies - Braves", "Dodgers - Giants", "Flyers - Lightning")) {
@@ -47,7 +40,7 @@ public class ExtractorDemo {
                     queue.add(new Question(question, query, question, false));
                 }
                 
-                for (Answer answer: extractor.extract(sections, queue)) {
+                for (Answer answer: extractor.extract(queue, data)) {
                     System.out.println(answer);
                 }
                 System.out.println();
@@ -60,7 +53,7 @@ public class ExtractorDemo {
             List<Question> queue = new ArrayList<Question>();
             queue.add(new Question(question, question, question, false));
             
-            for (Answer answer: extractor.extract(sections, queue)) {
+            for (Answer answer: extractor.extract(queue, data)) {
                 System.out.println(answer);
             }
         }

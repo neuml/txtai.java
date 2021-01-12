@@ -2,20 +2,20 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
+import txtai.API.IndexResult;
 import txtai.Labels;
-import txtai.Labels.Score;
 
 /**
  * Example labels functionality.
  * 
- * Implements logic found in this notebook: https://github.com/neuml/txtai/blob/master/examples/05_Labeling_with_zero_shot_classification.ipynb
+ * Implements logic found in this notebook: https://github.com/neuml/txtai/blob/master/examples/07_Apply_labels_with_zero_shot_classification.ipynb
  */
 public class LabelsDemo {
     public static void main(String[] args) {
         try {
             Labels labels = new Labels("http://localhost:8000");
 
-            List <String> sections = 
+            List <String> data =
                 Arrays.asList("Dodgers lose again, give up 3 HRs in a loss to the Giants",
                               "Giants 5 Cardinals 4 final in extra innings",
                               "Dodgers drop Game 2 against the Giants, 5-4",
@@ -35,9 +35,9 @@ public class LabelsDemo {
             System.out.printf("%-75s %s%n", "Text", "Label");
             System.out.println(new String(new char[100]).replace("\0", "-"));
 
-            for (String text: sections) {
-                List<Score> scores = labels.label(text, tags);
-                System.out.printf("%-75s %s%n", text, scores.get(0).id);
+            for (String text: data) {
+                List<IndexResult> label = labels.label(text, tags);
+                System.out.printf("%-75s %s%n", text, tags.get(label.get(0).id));
             }
 
             System.out.println();
@@ -46,9 +46,9 @@ public class LabelsDemo {
 
             tags = Arrays.asList("😀", "😡");
 
-            for (String text: sections) {
-                List<Score> scores = labels.label(text, tags);
-                System.out.printf("%-75s %s%n", text, scores.get(0).id);
+            for (String text: data) {
+                List<IndexResult> label = labels.label(text, tags);
+                System.out.printf("%-75s %s%n", text, tags.get(label.get(0).id));
             }
         }
         catch (Exception ex) {

@@ -1,7 +1,6 @@
 package txtai;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 
@@ -22,22 +21,9 @@ public class Extractor {
      */
     public interface Remote {
         @POST("extract")
-        Call<List<List<String>>> extract(@Body HashMap params);
+        Call<List<Answer>> extract(@Body HashMap params);
     }
  
-    /**
-     * Text section.
-     */
-    public static class Section {
-        public int id;
-        public String text;
-
-        public Section(int id, String text) {
-            this.id = id;
-            this.text = text;
-        }
-    }
-
     /**
      * Question parameters.
      */
@@ -67,17 +53,17 @@ public class Extractor {
      * Answer response.
      */
     public static class Answer {
-        public String question;
+        public String name;
         public String answer;
 
         /**
          * Creates an answer.
          * 
-         * @param question question
+         * @param name question identifier/name
          * @param answer answer to question
          */
-        public Answer(String question, String answer) {
-            this.question = question;
+        public Answer(String name, String answer) {
+            this.name = name;
             this.answer = answer;
         }
 
@@ -85,7 +71,7 @@ public class Extractor {
          * Answer as String.
          */
         public String toString() {
-            return this.question + " " + this.answer;
+            return this.name + " " + this.answer;
         }
     }
 
@@ -101,27 +87,19 @@ public class Extractor {
     }
 
     /**
-     * Extracts answers to input questions
+     * Extracts answers to input questions.
      * 
-     * @param documents list of {id: value, text: value}
-     * @param queue list of {name: value, query: value, question: value, snippet: value)
-     * @return extracted answers
+     * @param queue list of {name: value, query: value, question: value, snippet: value}
+     * @param text list of text
+     * @return list of {name: value, answer: value}
      */
-    public List<Answer> extract(List<Section> documents, List<Question> queue) throws IOException {
+    public List<Answer> extract(List<Question> queue, List<String> texts) throws IOException {
         // Post parameters
         HashMap<String, Object> params = new HashMap<String, Object>();
-        params.put("documents", documents);
         params.put("queue", queue);
+        params.put("texts", texts);
 
         // Execute API call
-        List<List<String>> response = this.api.extract(params).execute().body();
-
-        // Map array results to answers
-        List<Answer> answers = new ArrayList<Answer>();
-        for (List<String> entry: response) {
-            answers.add(new Answer(entry.get(0), entry.get(1)));
-        }
-
-        return answers;
+        return this.api.extract(params).execute().body();
     }
 }
