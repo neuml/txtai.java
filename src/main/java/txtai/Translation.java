@@ -23,10 +23,10 @@ public class Translation {
      */
     public interface Remote {
         @GET("translate")
-        Call<Object> translate(@Query("text") String text, @Query("target") String target, @Query("source") String source);
+        Call<String> translate(@Query("text") String text, @Query("target") String target, @Query("source") String source);
 
         @POST("batchtranslate")
-        Call<List<Object>> batchtranslate(@Body HashMap params);
+        Call<List<String>> batchtranslate(@Body HashMap params);
     }
 
     /**
@@ -48,7 +48,7 @@ public class Translation {
      * @param source source language code, detects language if not provided
      * @return translated text
      */
-    public Object translate(String text, String target, String source) throws IOException {
+    public String translate(String text, String target, String source) throws IOException {
         return this.api.translate(text, target, source).execute().body();
     }
 
@@ -60,7 +60,7 @@ public class Translation {
      * @param source source language code, detects language if not provided
      * @return list of translated text
      */
-    public List<Object> batchtranslate(List<String> texts, String target, String source) throws IOException {
+    public List<String> batchtranslate(List<String> texts, String target, String source) throws IOException {
         // Post parameters
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("texts", texts);

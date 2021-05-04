@@ -23,10 +23,10 @@ public class Transcription {
      */
     public interface Remote {
         @GET("transcribe")
-        Call<Object> transcribe(@Query("file") String file);
+        Call<String> transcribe(@Query("file") String file);
 
         @POST("batchtranscribe")
-        Call<List<Object>> batchtranscribe(@Body HashMap params);
+        Call<List<String>> batchtranscribe(@Body HashMap params);
     }
 
     /**
@@ -46,7 +46,7 @@ public class Transcription {
      * @param file file to transcribe
      * @return transcribed text
      */
-    public Object transcribe(String file) throws IOException {
+    public String transcribe(String file) throws IOException {
         return this.api.transcribe(file).execute().body();
     }
 
@@ -56,7 +56,7 @@ public class Transcription {
      * @param files list of files to transcribe
      * @return list of transcribed text
      */
-    public List<Object> batchtranscribe(List<String> files) throws IOException {
+    public List<String> batchtranscribe(List<String> files) throws IOException {
         // Post parameters
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("files", files);

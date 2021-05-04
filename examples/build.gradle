@@ -34,3 +34,9 @@ task labels(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "LabelsDemo"
 }
+
+task pipelines(type: JavaExec) {
+    description = "Runs Pipelines demo"
+    classpath = sourceSets.main.runtimeClasspath
+    main = "PipelinesDemo"
+}

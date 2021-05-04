@@ -23,10 +23,10 @@ public class Summary {
      */
     public interface Remote {
         @GET("summary")
-        Call<Object> summary(@Query("text") String text, @Query("minlength") Integer minlength, @Query("maxlength") Integer maxlength);
+        Call<String> summary(@Query("text") String text, @Query("minlength") Integer minlength, @Query("maxlength") Integer maxlength);
 
         @POST("batchsummary")
-        Call<List<Object>> batchsummary(@Body HashMap params);
+        Call<List<String>> batchsummary(@Body HashMap params);
     }
 
     /**
@@ -48,7 +48,7 @@ public class Summary {
      * @param maxlength maximum length for summary
      * @return summary text
      */
-    public Object summary(String text, int minlength, int maxlength) throws IOException {
+    public String summary(String text, int minlength, int maxlength) throws IOException {
         return this.api.summary(text, minlength != -1 ? minlength:null, maxlength != -1 ? maxlength:null).execute().body();
     }
 
@@ -60,7 +60,7 @@ public class Summary {
      * @param maxlength maximum length for summary
      * @return list of summary text
      */
-    public List<Object> batchsummary(List<String> texts, int minlength, int maxlength) throws IOException {
+    public List<String> batchsummary(List<String> texts, int minlength, int maxlength) throws IOException {
         // Post parameters
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("texts", texts);

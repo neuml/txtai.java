@@ -32,25 +32,25 @@ public class PipelinesDemo {
             System.out.println(text);
 
             Summary summary = new Summary(service);
-            String summarytext = (String)summary.summary(text, -1, -1);
+            String summarytext = summary.summary(text, -1, -1);
 
             System.out.println("\n---- Summary Text ----");
             System.out.println(summarytext);
 
             Translation translate = new Translation(service);
-            String translation = (String)translate.translate(summarytext, "es", null);
+            String translation = translate.translate(summarytext, "es", null);
 
             System.out.println("\n---- Summary Text in Spanish ----");
             System.out.println(translation);
 
             Workflow workflow = new Workflow(service);
-            List<Object> output = workflow.workflow("sumspanish", Arrays.asList(text));
+            List<Object> output = workflow.workflow("sumspanish", Arrays.asList("file:///tmp/txtai/article.pdf"));
 
             System.out.println("\n---- Workflow [Extract Text->Summarize->Translate] ----");
             System.out.println(output);
 
             Transcription transcribe = new Transcription(service);
-            String transcription = (String)transcribe.transcribe("/tmp/txtai/Make_huge_profits.wav");
+            String transcription = transcribe.transcribe("/tmp/txtai/Make_huge_profits.wav");
 
             System.out.println("\n---- Transcribed Text ----");
             System.out.println(transcription);
