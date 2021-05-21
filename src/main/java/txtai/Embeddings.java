@@ -36,6 +36,15 @@ public class Embeddings {
         @GET("index")
         Call<Void> index();
 
+        @GET("upsert")
+        Call<Void> upsert();
+
+        @POST("delete")
+        Call<List<String>> delete(@Body List<String> ids);
+
+        @GET("count")
+        Call<Integer> count();
+
         @POST("similarity")
         Call<List<IndexResult>> similarity(@Body HashMap params);
 
@@ -133,11 +142,36 @@ public class Embeddings {
     }
 
     /**
-     * Builds an embeddings index for previously batched documents. No further documents can be added
-     * after this call.
+     * Builds an embeddings index for previously batched documents.
      */
     public void index() throws IOException {
         this.api.index().execute();
+    }
+
+    /**
+     * Runs an embeddings upsert operation for previously batched documents.
+     */
+    public void upsert() throws IOException {
+        this.api.upsert().execute();
+    }
+
+    /**
+     * Deletes from an embeddings index. Returns list of ids deleted.
+     *
+     * @param ids list of ids to delete
+     * @return ids deleted
+     */
+    public List<String> delete(List<String> ids) throws IOException {
+        return this.api.delete(ids).execute().body();
+    }
+
+    /**
+     * Total number of elements in this embeddings index.
+     *
+     * @return number of elements in embeddings index
+     */
+    public int count() throws IOException {
+        return this.api.count().execute().body();
     }
 
     /**

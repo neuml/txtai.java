@@ -1,5 +1,5 @@
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import txtai.API.IndexResult;
@@ -53,6 +53,27 @@ public class EmbeddingsDemo {
                 int uid = Integer.parseInt(results.get(0).id);
                 System.out.printf("%-20s %s%n", query, data.get(uid));
             }
+
+            data.set(0, "Feel good story: baby panda born");
+
+            List<Document> updates = new ArrayList<Document>();
+            updates.add(new Document("0", data.get(0)));
+
+            embeddings.delete(Arrays.asList("5"));
+            embeddings.add(updates);
+            embeddings.upsert();
+
+            System.out.println("\nTest delete/upsert/count");
+            System.out.printf("%-20s %s%n", "Query", "Best Match");
+            System.out.println(new String(new char[50]).replace("\0", "-"));
+
+            String query = "feel good story";
+            List<SearchResult> results = embeddings.search(query, 1);
+            int uid = Integer.parseInt(results.get(0).id);
+            System.out.printf("%-20s %s%n", query, data.get(uid));
+
+            int count = embeddings.count();
+            System.out.printf("\nTotal Count: %d", count);
         }
         catch (Exception ex) {
             ex.printStackTrace();
