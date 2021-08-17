@@ -35,7 +35,7 @@ public class EmbeddingsDemo {
             System.out.printf("%-20s %s%n", "Query", "Best Match");
             System.out.println(new String(new char[50]).replace("\0", "-"));
 
-            for (String query: Arrays.asList("feel good story", "climate change", "health", "war", "wildlife", "asia", "north america", "dishonest junk")) {
+            for (String query: Arrays.asList("feel good story", "climate change", "public health story", "war", "wildlife", "asia", "lucky", "dishonest junk")) {
                 List<IndexResult> results = embeddings.similarity(query, data);
                 int uid = results.get(0).id;
                 System.out.printf("%-20s %s%n", query, data.get(uid));
@@ -48,13 +48,13 @@ public class EmbeddingsDemo {
             System.out.printf("%-20s %s%n", "Query", "Best Match");
             System.out.println(new String(new char[50]).replace("\0", "-"));
 
-            for (String query: Arrays.asList("feel good story", "climate change", "health", "war", "wildlife", "asia", "north america", "dishonest junk")) {
+            for (String query: Arrays.asList("feel good story", "climate change", "public health story", "war", "wildlife", "asia", "lucky", "dishonest junk")) {
                 List<SearchResult> results = embeddings.search(query, 1);
                 int uid = Integer.parseInt(results.get(0).id);
                 System.out.printf("%-20s %s%n", query, data.get(uid));
             }
 
-            data.set(0, "Feel good story: baby panda born");
+            data.set(0, "See it: baby panda born");
 
             List<Document> updates = new ArrayList<Document>();
             updates.add(new Document("0", data.get(0)));
