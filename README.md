@@ -1,11 +1,11 @@
-# txtai: AI-powered search engine for Java
+# txtai: Build AI-powered semantic search applications in Java
 
 [![Version](https://img.shields.io/github/release/neuml/txtai.java.svg?style=flat&color=success)](https://github.com/neuml/txtai.java/releases)
 [![GitHub Release Date](https://img.shields.io/github/release-date/neuml/txtai.java.svg?style=flat&color=blue)](https://github.com/neuml/txtai.java/releases)
 [![GitHub issues](https://img.shields.io/github/issues/neuml/txtai.java.svg?style=flat&color=success)](https://github.com/neuml/txtai.java/issues)
 [![GitHub last commit](https://img.shields.io/github/last-commit/neuml/txtai.java.svg?style=flat&color=blue)](https://github.com/neuml/txtai.java)
 
-[txtai](https://github.com/neuml/txtai) executes machine-learning workflows to transform data and build AI-powered text indices to perform similarity search.
+[txtai](https://github.com/neuml/txtai) executes machine-learning workflows to transform data and build AI-powered semantic search applications.
 
 This repository contains Java bindings for the txtai API. Full txtai functionality is supported.
 
