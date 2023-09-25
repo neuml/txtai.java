@@ -26,7 +26,7 @@ public class Embeddings {
     public interface Remote {
         @GET("search")
         Call<List<SearchResult>> search(@Query("query") String query, @Query("limit") int limit,
-                                        @Query("weights") float weights, @Query("index") String index);
+                                        @Query("weights") Float weights, @Query("index") String index);
 
         @POST("batchsearch")
         Call<List<List<SearchResult>>> batchsearch(@Body HashMap params);
@@ -116,7 +116,7 @@ public class Embeddings {
      * @param index index name, if applicable
      * @return list of {id: value, score: value}
      */
-    public List<SearchResult> search(String query, int limit, float weights, String index) throws IOException {
+    public List<SearchResult> search(String query, int limit, Float weights, String index) throws IOException {
         return this.api.search(query, limit, weights, index).execute().body();
     }
 
@@ -131,7 +131,7 @@ public class Embeddings {
      * @param index index name, if applicable
      * @return list of {id: value, score: value} per query
      */
-    public List<List<SearchResult>> batchsearch(List<String> queries, int limit, float weights, String index) throws IOException {
+    public List<List<SearchResult>> batchsearch(List<String> queries, int limit, Float weights, String index) throws IOException {
         // Post parameters
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("queries", queries);
