@@ -25,7 +25,8 @@ public class Embeddings {
      */
     public interface Remote {
         @GET("search")
-        Call<List<SearchResult>> search(@Query("query") String query, @Query("limit") int limit);
+        Call<List<SearchResult>> search(@Query("query") String query, @Query("limit") int limit,
+                                        @Query("weights") float weights, @Query("index") String index);
 
         @POST("batchsearch")
         Call<List<List<SearchResult>>> batchsearch(@Body HashMap params);
@@ -41,6 +42,9 @@ public class Embeddings {
 
         @POST("delete")
         Call<List<String>> delete(@Body List<String> ids);
+
+        @POST("reindex")
+        Call<Void> reindex(@Body HashMap params);
 
         @GET("count")
         Call<Integer> count();
@@ -108,10 +112,12 @@ public class Embeddings {
      * 
      * @param query query text
      * @param limit maximum results
+     * @param weights hybrid score weights, if applicable
+     * @param index index name, if applicable
      * @return list of {id: value, score: value}
      */
-    public List<SearchResult> search(String query, int limit) throws IOException {
-        return this.api.search(query, limit).execute().body();
+    public List<SearchResult> search(String query, int limit, float weights, String index) throws IOException {
+        return this.api.search(query, limit, weights, index).execute().body();
     }
 
     /**
@@ -121,13 +127,17 @@ public class Embeddings {
      *
      * @param queries queries text
      * @param limit maximum results
+     * @param weights hybrid score weights, if applicable
+     * @param index index name, if applicable
      * @return list of {id: value, score: value} per query
      */
-    public List<List<SearchResult>> batchsearch(List<String> queries, List<String> texts) throws IOException {
+    public List<List<SearchResult>> batchsearch(List<String> queries, int limit, float weights, String index) throws IOException {
         // Post parameters
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("queries", queries);
-        params.put("texts", texts);
+        params.put("limit", limit);
+        params.put("weights", weights);
+        params.put("index", index);
 
         return this.api.batchsearch(params).execute().body();
     }
@@ -163,6 +173,21 @@ public class Embeddings {
      */
     public List<String> delete(List<String> ids) throws IOException {
         return this.api.delete(ids).execute().body();
+    }
+
+    /**
+     * Recreates this embeddings index using config. This method only works if document content storage is enabled.
+     *
+     * @param config new config
+     * @param function optional function to prepare content for indexing
+     */
+    public void reindex(HashMap config, String function) throws IOException {
+        // Post parameters
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("config", config);
+        params.put("function", function);
+
+        this.api.reindex(params).execute();
     }
 
     /**

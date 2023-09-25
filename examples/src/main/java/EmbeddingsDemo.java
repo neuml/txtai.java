@@ -49,7 +49,7 @@ public class EmbeddingsDemo {
             System.out.println(new String(new char[50]).replace("\0", "-"));
 
             for (String query: Arrays.asList("feel good story", "climate change", "public health story", "war", "wildlife", "asia", "lucky", "dishonest junk")) {
-                List<SearchResult> results = embeddings.search(query, 1);
+                List<SearchResult> results = embeddings.search(query, 1, null, null);
                 int uid = Integer.parseInt(results.get(0).id);
                 System.out.printf("%-20s %s%n", query, data.get(uid));
             }
@@ -68,7 +68,7 @@ public class EmbeddingsDemo {
             System.out.println(new String(new char[50]).replace("\0", "-"));
 
             String query = "feel good story";
-            List<SearchResult> results = embeddings.search(query, 1);
+            List<SearchResult> results = embeddings.search(query, 1, null, null);
             int uid = Integer.parseInt(results.get(0).id);
             System.out.printf("%-20s %s%n", query, data.get(uid));
 
