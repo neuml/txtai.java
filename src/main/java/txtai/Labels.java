@@ -15,7 +15,6 @@ import txtai.API.IndexResult;
  */
 @SuppressWarnings("rawtypes")
 public class Labels {
-    private String url;
     private Remote api;
 
     /**
@@ -31,13 +30,31 @@ public class Labels {
 
     /**
      * Creates a Labels instance.
+     */
+    public Labels() {
+        // Create API instance
+        this.api = API.create(null, null, Remote.class);
+    }
+
+    /**
+     * Creates a Labels instance.
      * 
-     * @param url base url of txtai API
+     * @param url API url
      */
     public Labels(String url) {
         // Create API instance
-        this.url = url;
-        this.api = API.create(this.url, Remote.class);
+        this.api = API.create(url, null, Remote.class);
+    }
+
+    /**
+     * Creates a Labels instance.
+     * 
+     * @param url API url
+     * @param token API token
+     */
+    public Labels(String url, String token) {
+        // Create API instance
+        this.api = API.create(url, token, Remote.class);
     }
 
     /**

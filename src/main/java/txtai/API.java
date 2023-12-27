@@ -30,16 +30,21 @@ public class API {
     /**
      * Creates a new Retrofit API instance.
      * 
-     * @param url base url
+     * @param url API url
+     * @param token API token
      * @param type service interface class
      * @return instance of type
      */
-    public static <T> T create(String url, Class<T> type) {
+    public static <T> T create(String url, String token, Class<T> type) {
+        // Default url and token to environment variables, if empty
+        url = url != null ? url : System.getenv("TXTAI_API_URL");
+        token = token != null ? token : System.getenv("TXTAI_API_TOKEN");
+
         // Configure API instance
         Retrofit retrofit =
             new Retrofit.Builder()
                 .baseUrl(url)
-                .client(API.client())
+                .client(API.client(token))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -51,14 +56,21 @@ public class API {
      * Builds a custom http client that raises an Exception when calls are not
      * successful.
      * 
+     * @param token API token
      * @return client instance
      */
-    public static OkHttpClient client() {
+    public static OkHttpClient client(String token) {
         return new OkHttpClient.Builder()  
             .addInterceptor(new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
                     Request request = chain.request();
+
+                    // Add authorization header
+                    if (token != null) {
+                        request = request.newBuilder().addHeader("Authorization", "Bearer " + token).build();
+                    }
+
                     Response response = chain.proceed(request);
 
                     if (!response.isSuccessful()) {

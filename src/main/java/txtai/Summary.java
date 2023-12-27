@@ -15,7 +15,6 @@ import retrofit2.http.Query;
  */
 @SuppressWarnings("rawtypes")
 public class Summary {
-    private String url;
     private Remote api;
 
     /**
@@ -31,13 +30,31 @@ public class Summary {
 
     /**
      * Creates a Summary instance.
+     */
+    public Summary() {
+        // Create API instance
+        this.api = API.create(null, null, Remote.class);
+    }
+
+    /**
+     * Creates a Summary instance.
      * 
-     * @param url base url of txtai API
+     * @param url API url
      */
     public Summary(String url) {
         // Create API instance
-        this.url = url;
-        this.api = API.create(this.url, Remote.class);
+        this.api = API.create(url, null, Remote.class);
+    }
+
+    /**
+     * Creates a Summary instance.
+     * 
+     * @param url API url
+     * @param token API token
+     */
+    public Summary(String url, String token) {
+        // Create API instance
+        this.api = API.create(url, token, Remote.class);
     }
 
     /**

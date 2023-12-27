@@ -13,7 +13,6 @@ import retrofit2.http.POST;
  */
 @SuppressWarnings("rawtypes")
 public class Extractor {
-    private String url;
     private Remote api;
 
     /**
@@ -77,13 +76,31 @@ public class Extractor {
 
     /**
      * Creates an Extractor instance.
+     */
+    public Extractor() {
+        // Create API instance
+        this.api = API.create(null, null, Remote.class);
+    }
+
+    /**
+     * Creates an Extractor instance.
      * 
-     * @param url base url of txtai API
+     * @param url API url
      */
     public Extractor(String url) {
         // Create API instance
-        this.url = url;
-        this.api = API.create(this.url, Remote.class);
+        this.api = API.create(url, null, Remote.class);
+    }
+
+    /**
+     * Creates an Extractor instance.
+     * 
+     * @param url API url
+     * @param token API token
+     */
+    public Extractor(String url, String token) {
+        // Create API instance
+        this.api = API.create(url, token, Remote.class);
     }
 
     /**

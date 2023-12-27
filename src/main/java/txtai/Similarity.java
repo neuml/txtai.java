@@ -15,7 +15,6 @@ import txtai.API.IndexResult;
  */
 @SuppressWarnings("rawtypes")
 public class Similarity {
-    private String url;
     private Remote api;
 
     /**
@@ -31,13 +30,31 @@ public class Similarity {
 
     /**
      * Creates a Similarity instance.
+     */
+    public Similarity() {
+        // Create API instance
+        this.api = API.create(null, null, Remote.class);
+    }
+
+    /**
+     * Creates a Similarity instance.
      * 
-     * @param url base url of txtai API
+     * @param url API url
      */
     public Similarity(String url) {
         // Create API instance
-        this.url = url;
-        this.api = API.create(this.url, Remote.class);
+        this.api = API.create(url, null, Remote.class);
+    }
+
+    /**
+     * Creates a Similarity instance.
+     * 
+     * @param url API url
+     * @param token API token
+     */
+    public Similarity(String url, String token) {
+        // Create API instance
+        this.api = API.create(url, token, Remote.class);
     }
 
     /**

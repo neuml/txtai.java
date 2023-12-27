@@ -15,7 +15,6 @@ import retrofit2.http.Query;
  */
 @SuppressWarnings("rawtypes")
 public class Segmentation {
-    private String url;
     private Remote api;
 
     /**
@@ -31,13 +30,31 @@ public class Segmentation {
 
     /**
      * Creates a Segmentation instance.
+     */
+    public Segmentation() {
+        // Create API instance
+        this.api = API.create(null, null, Remote.class);
+    }
+
+    /**
+     * Creates a Segmentation instance.
      * 
-     * @param url base url of txtai API
+     * @param url API url
      */
     public Segmentation(String url) {
         // Create API instance
-        this.url = url;
-        this.api = API.create(this.url, Remote.class);
+        this.api = API.create(url, null, Remote.class);
+    }
+
+    /**
+     * Creates a Segmentation instance.
+     * 
+     * @param url API url
+     * @param token API token
+     */
+    public Segmentation(String url, String token) {
+        // Create API instance
+        this.api = API.create(url, token, Remote.class);
     }
 
     /**

@@ -13,7 +13,6 @@ import retrofit2.http.POST;
  */
 @SuppressWarnings("rawtypes")
 public class Workflow {
-    private String url;
     private Remote api;
 
     /**
@@ -26,13 +25,31 @@ public class Workflow {
 
     /**
      * Creates a Workflow instance.
+     */
+    public Workflow() {
+        // Create API instance
+        this.api = API.create(null, null, Remote.class);
+    }
+
+    /**
+     * Creates a Workflow instance.
      * 
-     * @param url base url of txtai API
+     * @param url API url
      */
     public Workflow(String url) {
         // Create API instance
-        this.url = url;
-        this.api = API.create(this.url, Remote.class);
+        this.api = API.create(url, null, Remote.class);
+    }
+
+    /**
+     * Creates a Workflow instance.
+     * 
+     * @param url API url
+     * @param token API token
+     */
+    public Workflow(String url, String token) {
+        // Create API instance
+        this.api = API.create(url, token, Remote.class);
     }
 
     /**

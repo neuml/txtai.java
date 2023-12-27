@@ -15,7 +15,6 @@ import retrofit2.http.Query;
  */
 @SuppressWarnings("rawtypes")
 public class Translation {
-    private String url;
     private Remote api;
 
     /**
@@ -31,13 +30,31 @@ public class Translation {
 
     /**
      * Creates a Translation instance.
+     */
+    public Translation() {
+        // Create API instance
+        this.api = API.create(null, null, Remote.class);
+    }
+
+    /**
+     * Creates a Translation instance.
      * 
-     * @param url base url of txtai API
+     * @param url API url
      */
     public Translation(String url) {
         // Create API instance
-        this.url = url;
-        this.api = API.create(this.url, Remote.class);
+        this.api = API.create(url, null, Remote.class);
+    }
+
+    /**
+     * Creates a Translation instance.
+     * 
+     * @param url API url
+     * @param token API token
+     */
+    public Translation(String url, String token) {
+        // Create API instance
+        this.api = API.create(url, token, Remote.class);
     }
 
     /**
