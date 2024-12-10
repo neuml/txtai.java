@@ -17,5 +17,5 @@ java {
 
 jar {
     archiveBaseName = "txtai"
-    archiveVersion = "8.0.0"
+    archiveVersion = "8.1.0"
 }
