@@ -32,7 +32,7 @@ Jitpack is the recommended way to integrate txtai with Java. See [this link](htt
 The following is an example adding txtai to a project's `build.gradle` file. The same attributes can be ported to other build systems per the JitPack link above.
 
 ```gradle
-implementation 'com.github.neuml:txtai.java:v8.5.0'
+implementation 'com.github.neuml:txtai.java:v8.6.0'
 ```
 
 txtai can also be manually built from GitHub.
