@@ -1,13 +1,21 @@
 package txtai;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 import txtai.API.IndexResult;
@@ -59,6 +67,18 @@ public class Embeddings {
 
         @POST("batchtransform")
         Call<List<List<Double>>> batchtransform(@Body List<String> texts);
+
+        @Multipart
+        @POST("addobject")
+        Call<Void> addobject(@Part List<MultipartBody.Part> data,
+                             @Part("uid") List<RequestBody> uid,
+                             @Part("field") RequestBody field);
+
+        @Multipart
+        @POST("addimage")
+        Call<Void> addimage(@Part List<MultipartBody.Part> data,
+                            @Part("uid") List<RequestBody> uid,
+                            @Part("field") RequestBody field);
     }
 
     /**
@@ -270,5 +290,134 @@ public class Embeddings {
      */
     public List<List<Double>> batchtransform(List<String> texts) throws IOException {
         return this.api.batchtransform(texts).execute().body();
+    }
+
+    /**
+     * Adds a batch of binary objects for indexing.
+     *
+     * @param data list of binary data as byte arrays
+     * @param uid list of corresponding ids (optional, can be null)
+     * @param field optional object field name (can be null)
+     */
+    public void addobject(List<byte[]> data, List<String> uid, String field) throws IOException {
+        List<MultipartBody.Part> parts = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            RequestBody body = RequestBody.create(MediaType.parse("application/octet-stream"), data.get(i));
+            parts.add(MultipartBody.Part.createFormData("data", "file" + i, body));
+        }
+
+        List<RequestBody> uidBodies = null;
+        if (uid != null) {
+            uidBodies = new ArrayList<>();
+            for (String id : uid) {
+                uidBodies.add(RequestBody.create(MediaType.parse("text/plain"), id));
+            }
+        }
+
+        RequestBody fieldBody = field != null ? RequestBody.create(MediaType.parse("text/plain"), field) : null;
+
+        this.api.addobject(parts, uidBodies, fieldBody).execute();
+    }
+
+    /**
+     * Adds a batch of binary objects for indexing using files.
+     *
+     * @param files list of files to upload
+     * @param uid list of corresponding ids (optional, can be null)
+     * @param field optional object field name (can be null)
+     */
+    public void addobject(File[] files, List<String> uid, String field) throws IOException {
+        List<MultipartBody.Part> parts = new ArrayList<>();
+        for (File file : files) {
+            RequestBody body = RequestBody.create(MediaType.parse("application/octet-stream"), file);
+            parts.add(MultipartBody.Part.createFormData("data", file.getName(), body));
+        }
+
+        List<RequestBody> uidBodies = null;
+        if (uid != null) {
+            uidBodies = new ArrayList<>();
+            for (String id : uid) {
+                uidBodies.add(RequestBody.create(MediaType.parse("text/plain"), id));
+            }
+        }
+
+        RequestBody fieldBody = field != null ? RequestBody.create(MediaType.parse("text/plain"), field) : null;
+
+        this.api.addobject(parts, uidBodies, fieldBody).execute();
+    }
+
+    /**
+     * Adds a batch of images for indexing.
+     *
+     * @param files list of image files to upload
+     * @param uid list of corresponding ids
+     * @param field optional object field name (can be null)
+     */
+    public void addimage(File[] files, List<String> uid, String field) throws IOException {
+        List<MultipartBody.Part> parts = new ArrayList<>();
+        for (File file : files) {
+            String contentType = getImageContentType(file.getName());
+            RequestBody body = RequestBody.create(MediaType.parse(contentType), file);
+            parts.add(MultipartBody.Part.createFormData("data", file.getName(), body));
+        }
+
+        List<RequestBody> uidBodies = null;
+        if (uid != null) {
+            uidBodies = new ArrayList<>();
+            for (String id : uid) {
+                uidBodies.add(RequestBody.create(MediaType.parse("text/plain"), id));
+            }
+        }
+
+        RequestBody fieldBody = field != null ? RequestBody.create(MediaType.parse("text/plain"), field) : null;
+
+        this.api.addimage(parts, uidBodies, fieldBody).execute();
+    }
+
+    /**
+     * Adds a batch of images for indexing using byte arrays.
+     *
+     * @param data list of image data as byte arrays
+     * @param uid list of corresponding ids
+     * @param field optional object field name (can be null)
+     */
+    public void addimage(List<byte[]> data, List<String> uid, String field) throws IOException {
+        List<MultipartBody.Part> parts = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            RequestBody body = RequestBody.create(MediaType.parse("image/jpeg"), data.get(i));
+            parts.add(MultipartBody.Part.createFormData("data", "image" + i + ".jpg", body));
+        }
+
+        List<RequestBody> uidBodies = null;
+        if (uid != null) {
+            uidBodies = new ArrayList<>();
+            for (String id : uid) {
+                uidBodies.add(RequestBody.create(MediaType.parse("text/plain"), id));
+            }
+        }
+
+        RequestBody fieldBody = field != null ? RequestBody.create(MediaType.parse("text/plain"), field) : null;
+
+        this.api.addimage(parts, uidBodies, fieldBody).execute();
+    }
+
+    /**
+     * Determines the content type based on file extension.
+     *
+     * @param filename the filename to check
+     * @return the content type string
+     */
+    private String getImageContentType(String filename) {
+        String lower = filename.toLowerCase();
+        if (lower.endsWith(".png")) {
+            return "image/png";
+        } else if (lower.endsWith(".gif")) {
+            return "image/gif";
+        } else if (lower.endsWith(".webp")) {
+            return "image/webp";
+        } else if (lower.endsWith(".bmp")) {
+            return "image/bmp";
+        }
+        return "image/jpeg";
     }
 }
